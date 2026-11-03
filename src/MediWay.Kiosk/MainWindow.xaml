@@ -1,0 +1,150 @@
+<Window x:Name="KioskWindow" x:Class="MediWay.Kiosk.MainWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:controls="clr-namespace:MediWay.Kiosk.Controls"
+ Title="MEDI-WAY · 환자 접수" Height="960" Width="540" MinHeight="720" MinWidth="440"
+ WindowStartupLocation="CenterScreen" Background="{DynamicResource PageBrush}" FontFamily="맑은 고딕"
+ PreviewMouseDown="OnActivity" PreviewKeyDown="OnActivity">
+ <Window.Resources>
+  <BooleanToVisibilityConverter x:Key="Visible"/>
+  <controls:QrImageConverter x:Key="QrImage"/>
+  <Style TargetType="TextBlock"><Setter Property="TextWrapping" Value="Wrap"/><Setter Property="Foreground" Value="{DynamicResource TextBrush}"/></Style>
+  <Style TargetType="TextBox"><Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/><Setter Property="Foreground" Value="{DynamicResource TextBrush}"/><Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/><Setter Property="CaretBrush" Value="{DynamicResource TextBrush}"/></Style>
+  <Style TargetType="ComboBox">
+   <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/><Setter Property="Foreground" Value="{DynamicResource TextBrush}"/><Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ComboBox">
+    <Grid>
+     <ToggleButton IsChecked="{Binding IsDropDownOpen,RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}" Focusable="False" Background="{TemplateBinding Background}" Foreground="{TemplateBinding Foreground}">
+      <ToggleButton.Template><ControlTemplate TargetType="ToggleButton"><Border Background="{TemplateBinding Background}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" Padding="10"><Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><ContentPresenter x:Name="RoomSelectionPresenter" Content="{Binding SelectionBoxItem,RelativeSource={RelativeSource AncestorType=ComboBox}}" ContentTemplate="{Binding SelectionBoxItemTemplate,RelativeSource={RelativeSource AncestorType=ComboBox}}" ContentTemplateSelector="{Binding ItemTemplateSelector,RelativeSource={RelativeSource AncestorType=ComboBox}}" VerticalAlignment="Center"/><TextBlock Grid.Column="1" Text="▼" Margin="10,0,0,0" VerticalAlignment="Center"/></Grid></Border></ControlTemplate></ToggleButton.Template>
+     </ToggleButton>
+     <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" AllowsTransparency="True" Focusable="False">
+      <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" MinWidth="{Binding ActualWidth,RelativeSource={RelativeSource TemplatedParent}}"><ScrollViewer MaxHeight="300"><ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/></ScrollViewer></Border>
+     </Popup>
+    </Grid>
+    <ControlTemplate.Triggers><Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/></Trigger><Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.65"/></Trigger></ControlTemplate.Triggers>
+   </ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <Style TargetType="ComboBoxItem"><Setter Property="AutomationProperties.Name" Value="{Binding Name}"/><Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/><Setter Property="Foreground" Value="{DynamicResource TextBrush}"/><Setter Property="MinHeight" Value="{DynamicResource TouchHeight}"/></Style>
+  <Style TargetType="Button">
+   <Setter Property="MinHeight" Value="{DynamicResource TouchHeight}"/><Setter Property="FontSize" Value="{DynamicResource Font21}"/>
+   <Setter Property="Margin" Value="4"/><Setter Property="Padding" Value="12,8"/>
+   <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/><Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+   <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/><Setter Property="Cursor" Value="Hand"/>
+   <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
+    <Border x:Name="Frame" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="2" Padding="{TemplateBinding Padding}">
+     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+    </Border>
+    <ControlTemplate.Triggers>
+     <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Frame" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/><Setter TargetName="Frame" Property="BorderThickness" Value="4"/></Trigger>
+     <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Frame" Property="BorderThickness" Value="4"/></Trigger>
+     <Trigger Property="IsPressed" Value="True"><Setter TargetName="Frame" Property="Opacity" Value="0.7"/></Trigger>
+     <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Frame" Property="Opacity" Value="0.5"/></Trigger>
+    </ControlTemplate.Triggers>
+   </ControlTemplate></Setter.Value></Setter>
+  </Style>
+  <Style x:Key="Primary" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+   <Setter Property="Background" Value="{DynamicResource AccentBrush}"/><Setter Property="Foreground" Value="{DynamicResource OnAccentBrush}"/>
+   <Setter Property="FontWeight" Value="Bold"/>
+  </Style>
+ </Window.Resources>
+ <Grid Margin="24">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <StackPanel Margin="0,0,0,20">
+   <CheckBox Content="큰 글씨 · 고대비" IsChecked="{Binding AccessibleMode, ElementName=KioskWindow}" FontSize="{DynamicResource Font20}" Foreground="{DynamicResource TextBrush}" MinHeight="48" VerticalContentAlignment="Center" AutomationProperties.Name="큰 글씨 고대비 모드"/>
+   <TextBlock Text="MEDI-WAY" FontSize="{DynamicResource Font30}" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+   <TextBlock Text="스마트 병원 접수 · 가상 환자 시연" FontSize="{DynamicResource Font15}" Margin="0,4,0,0"/>
+   <TextBlock Text="{Binding Connection.StatusText}" FontSize="{DynamicResource Font15}" Margin="0,6,0,0" AutomationProperties.LiveSetting="Polite"/>
+  </StackPanel>
+  <ScrollViewer x:Name="ScreenScrollViewer" Grid.Row="1" controls:ScreenScrollReset.Screen="{Binding Screen}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+   <StackPanel>
+    <StackPanel Visibility="{Binding IsInput, Converter={StaticResource Visible}}">
+     <TextBlock Text="환자번호를 입력해 주세요" FontSize="{DynamicResource Font27}" FontWeight="Bold"/>
+     <TextBlock Text="숫자만 입력해도 됩니다. 예: 0001 → P0001" FontSize="{DynamicResource Font16}" Margin="0,10,0,20"/>
+     <TextBox x:Name="PatientNumberInput" Text="{Binding PatientNumber, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding CanEdit}" MaxLength="12"
+       FontSize="{DynamicResource Font32}" Height="{DynamicResource InputHeight}" Padding="12,8" VerticalContentAlignment="Center" AutomationProperties.Name="환자번호">
+      <TextBox.InputBindings><KeyBinding Key="Enter" Command="{Binding LookupCommand}"/></TextBox.InputBindings>
+     </TextBox>
+     <UniformGrid Columns="3" Margin="-4,16,-4,12">
+      <Button Content="1" Command="{Binding KeyCommand}" CommandParameter="1"/>
+      <Button Content="2" Command="{Binding KeyCommand}" CommandParameter="2"/>
+      <Button Content="3" Command="{Binding KeyCommand}" CommandParameter="3"/>
+      <Button Content="4" Command="{Binding KeyCommand}" CommandParameter="4"/>
+      <Button Content="5" Command="{Binding KeyCommand}" CommandParameter="5"/>
+      <Button Content="6" Command="{Binding KeyCommand}" CommandParameter="6"/>
+      <Button Content="7" Command="{Binding KeyCommand}" CommandParameter="7"/>
+      <Button Content="8" Command="{Binding KeyCommand}" CommandParameter="8"/>
+      <Button Content="9" Command="{Binding KeyCommand}" CommandParameter="9"/>
+      <Button Content="전체 지움" FontSize="{DynamicResource Font17}" Command="{Binding KeyCommand}" CommandParameter="clear"/>
+      <Button Content="0" Command="{Binding KeyCommand}" CommandParameter="0"/>
+      <Button Content="한 글자 지움" FontSize="{DynamicResource Font15}" Command="{Binding KeyCommand}" CommandParameter="back"/>
+     </UniformGrid>
+     <Button Content="환자 조회" Style="{StaticResource Primary}" Command="{Binding LookupCommand}"/>
+     <Expander Header="바코드 스캐너 · 가상 입력" Foreground="{DynamicResource TextBrush}" FontSize="{DynamicResource Font17}" Margin="4,16,4,8" Expanded="OnScannerExpanded">
+      <StackPanel>
+       <TextBlock Text="입력 칸을 선택하고 스캔해 주세요. 직접 P0001을 입력한 뒤 Enter를 눌러도 됩니다." FontSize="{DynamicResource Font16}" Margin="0,10,0,8"/>
+       <TextBox x:Name="ScannerInput" Text="{Binding BarcodeInput,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding CanEdit}" MaxLength="64" FontSize="{DynamicResource Font24}" MinHeight="{DynamicResource TouchHeight}" Padding="10" AutomationProperties.Name="환자 바코드 입력">
+        <TextBox.InputBindings><KeyBinding Key="Enter" Command="{Binding ScanCommand}"/></TextBox.InputBindings>
+       </TextBox>
+       <Button Content="바코드 읽기" Command="{Binding ScanCommand}"/>
+       <Button Content="가상 스캔 · P0001" Command="{Binding DemoScanCommand}"/>
+       <TextBlock Text="스캔은 환자 조회까지만 진행합니다. 진료실을 확인한 후 접수해 주세요." FontSize="{DynamicResource Font15}" Margin="0,8,0,0"/>
+      </StackPanel>
+     </Expander>
+    </StackPanel>
+    <StackPanel Visibility="{Binding IsConfirm, Converter={StaticResource Visible}}">
+     <TextBlock Text="접수 내용을 확인해 주세요" FontSize="{DynamicResource Font27}" FontWeight="Bold"/>
+     <Border Background="{DynamicResource SurfaceBrush}" Padding="20" CornerRadius="12" Margin="0,24,0,20">
+      <StackPanel><TextBlock Text="환자" FontSize="{DynamicResource Font16}"/><TextBlock Text="{Binding MaskedName}" FontSize="{DynamicResource Font32}" FontWeight="Bold" Margin="0,8,0,0"/></StackPanel>
+     </Border>
+     <TextBlock Text="진료실 선택" FontSize="{DynamicResource Font20}" Margin="0,0,0,12"/>
+     <ComboBox ItemsSource="{Binding Rooms}" SelectedItem="{Binding SelectedRoom}" DisplayMemberPath="Name"
+       IsEnabled="{Binding CanSelectRoom}" FontSize="{DynamicResource Font24}" MinHeight="60" Padding="10" AutomationProperties.Name="진료실 선택"/>
+     <TextBlock Text="오늘 진행 중인 접수가 있으면 진료과와 관계없이 기존 번호와 진료실을 안내합니다." FontSize="{DynamicResource Font16}" Margin="0,18,0,24"/>
+     <Button Content="{Binding RegisterLabel}" Style="{StaticResource Primary}" Command="{Binding RegisterCommand}"/>
+     <Button Content="처음으로" Command="{Binding HomeCommand}"/>
+    </StackPanel>
+    <StackPanel Visibility="{Binding IsResult, Converter={StaticResource Visible}}">
+     <TextBlock Text="{Binding ResultTitle}" FontSize="{DynamicResource Font28}" FontWeight="Bold"/>
+     <Border Background="{DynamicResource SurfaceBrush}" CornerRadius="16" Padding="20" Margin="0,24,0,20">
+      <StackPanel HorizontalAlignment="Center">
+       <TextBlock Text="접수번호" FontSize="{DynamicResource Font20}" HorizontalAlignment="Center"/>
+       <TextBlock Text="{Binding TicketNumber}" FontSize="{DynamicResource Font100}" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" HorizontalAlignment="Center"/>
+       <TextBlock Text="{Binding ResultRoom}" FontSize="{DynamicResource Font28}" FontWeight="Bold" HorizontalAlignment="Center"/>
+       <TextBlock Text="{Binding ResultStatus}" FontSize="{DynamicResource Font22}" Margin="0,12,0,0" HorizontalAlignment="Center"/>
+       <TextBlock Text="{Binding ResultTime}" FontSize="{DynamicResource Font16}" Margin="0,12,0,0" HorizontalAlignment="Center"/>
+      </StackPanel>
+     </Border>
+     <TextBlock Text="진료실과 현재 접수 상태를 확인해 주세요. 도움이 필요하면 안내 데스크에 문의해 주세요." FontSize="{DynamicResource Font17}" Margin="0,0,0,24"/>
+     <Button Content="진료실 길 안내" Style="{StaticResource Primary}" Command="{Binding GuideCommand}"/>
+     <Button Content="대기표 파일 저장" Command="{Binding SaveTicketCommand}"/>
+     <TextBlock Text="{Binding TicketSaveMessage}" FontSize="{DynamicResource Font15}" Margin="4,8,4,12" AutomationProperties.LiveSetting="Polite"/>
+     <Button Content="휴대폰 길 안내 QR" Command="{Binding MobileCommand}"/>
+     <Button Content="처음으로" Style="{StaticResource Primary}" Command="{Binding HomeCommand}"/>
+    </StackPanel>
+    <StackPanel Visibility="{Binding IsGuide, Converter={StaticResource Visible}}">
+     <TextBlock Text="진료실까지 안내할게요" FontSize="{DynamicResource Font27}" FontWeight="Bold"/>
+     <TextBlock Text="{Binding GuideSummary}" FontSize="{DynamicResource Font21}" FontWeight="Bold" Margin="0,10,0,6"/>
+     <TextBlock Text="{Binding GuideDistance}" FontSize="{DynamicResource Font16}"/>
+     <controls:NavigationMap AccessibleMode="{Binding AccessibleMode, ElementName=KioskWindow}" Route="{Binding Route}" Height="470" Margin="0,12,0,10"/>
+     <TextBlock Text="{Binding GuideNotice}" FontSize="{DynamicResource Font15}" Margin="0,6,0,12"/>
+     <WrapPanel><Button Content="경로 다시 확인" FontSize="{DynamicResource Font17}" Command="{Binding GuideCommand}"/><Button Content="휴대폰 QR" FontSize="{DynamicResource Font17}" Command="{Binding MobileCommand}"/><Button Content="접수 결과" FontSize="{DynamicResource Font17}" Command="{Binding ReceiptCommand}"/><Button Content="처음으로" FontSize="{DynamicResource Font17}" Command="{Binding HomeCommand}"/></WrapPanel>
+    </StackPanel>
+    <StackPanel Visibility="{Binding IsQr, Converter={StaticResource Visible}}">
+     <TextBlock Text="휴대폰으로 길 안내 보기" FontSize="{DynamicResource Font26}" FontWeight="Bold"/>
+     <TextBlock Text="{Binding GuideSummary}" FontSize="{DynamicResource Font21}" Margin="0,12,0,8"/>
+     <Border Background="White" Padding="12" CornerRadius="12" Margin="0,14,0,14"><Image Source="{Binding QrPngBase64,Converter={StaticResource QrImage}}" Width="320" Height="320" Stretch="Uniform" RenderOptions.BitmapScalingMode="NearestNeighbor" AutomationProperties.Name="모바일 길 안내 QR"/></Border>
+     <TextBlock Text="{Binding QrNotice}" FontSize="{DynamicResource Font17}" Margin="0,0,0,12"/>
+     <TextBlock Text="{Binding QrExpires}" FontSize="{DynamicResource Font15}" Margin="0,0,0,20"/>
+     <Button Content="화면 길 안내" Style="{StaticResource Primary}" Command="{Binding GuideCommand}"/>
+     <Button Content="접수 결과" Command="{Binding ReceiptCommand}"/>
+     <Button Content="처음으로" Command="{Binding HomeCommand}"/>
+    </StackPanel>
+    <TextBlock Text="{Binding Message}" FontSize="{DynamicResource Font19}" Foreground="{DynamicResource ErrorBrush}" Margin="4,20,4,8" AutomationProperties.LiveSetting="Assertive"/>
+    <TextBlock Text="{Binding LocalStatus}" FontSize="{DynamicResource Font15}" Margin="4,8"/>
+    <Button Content="복구 상태 확인" Command="{Binding InitializeCommand}" Visibility="{Binding NeedsLocalInitialization,Converter={StaticResource Visible}}"/>
+    <ProgressBar IsIndeterminate="True" Height="5" Margin="4,8" Visibility="{Binding IsBusy, Converter={StaticResource Visible}}"/>
+   </StackPanel>
+  </ScrollViewer>
+  <TextBlock Grid.Row="2" Text="{Binding TimerText}" FontSize="{DynamicResource Font14}" Margin="0,18,0,0" Foreground="{DynamicResource MutedBrush}"/>
+ </Grid>
+</Window>

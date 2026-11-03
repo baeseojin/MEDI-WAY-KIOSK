@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MediWay.Infrastructure/MediWay.Infrastructure.csproj" />
+    <Project Path="src/MediWay.Application/MediWay.Application.csproj" />
+    <Project Path="src/MediWay.Domain/MediWay.Domain.csproj" />
+    <Project Path="src/MediWay.Api/MediWay.Api.csproj" />
+    <Project Path="src/MediWay.Contracts/MediWay.Contracts.csproj" />
+    <Project Path="src/MediWay.Display/MediWay.Display.csproj" />
+    <Project Path="src/MediWay.Kiosk/MediWay.Kiosk.csproj" />
+    <Project Path="src/MediWay.Staff/MediWay.Staff.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MediWay.Stability.Tests/MediWay.Stability.Tests.csproj" />
+    <Project Path="tests/MediWay.Domain.Tests/MediWay.Domain.Tests.csproj" />
+    <Project Path="tests/MediWay.Display.Tests/MediWay.Display.Tests.csproj" />
+    <Project Path="tests/MediWay.Kiosk.Tests/MediWay.Kiosk.Tests.csproj" />
+    <Project Path="tests/MediWay.MobileGuide.Tests/MediWay.MobileGuide.Tests.csproj" />
+    <Project Path="tests/MediWay.Navigation.Tests/MediWay.Navigation.Tests.csproj" />
+    <Project Path="tests/MediWay.Staff.Tests/MediWay.Staff.Tests.csproj" />
+  </Folder>
+</Solution>

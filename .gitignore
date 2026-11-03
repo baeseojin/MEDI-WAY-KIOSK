@@ -1,0 +1,15 @@
+**/bin/
+**/obj/
+**/.vs/
+**/work/
+.runtime/
+.env
+.env.*
+!.env.example
+*.user
+*.suo
+*.log
+validation/
+samples/
+step17-evidence/
+*.md

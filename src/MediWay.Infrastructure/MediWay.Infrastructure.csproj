@@ -1,0 +1,1 @@
+<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup><ItemGroup><ProjectReference Include="../MediWay.Application/MediWay.Application.csproj" /><PackageReference Include="Npgsql" Version="10.0.0" /></ItemGroup></Project>
