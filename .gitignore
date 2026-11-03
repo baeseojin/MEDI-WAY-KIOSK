@@ -13,3 +13,4 @@ validation/
 samples/
 step17-evidence/
 *.md
+!README.md
