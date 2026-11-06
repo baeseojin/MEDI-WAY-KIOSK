@@ -1,17 +1,9 @@
 using System.ComponentModel;
 using System.Threading.Channels;
-using System.Windows.Input;
 using MediWay.Contracts;
 using MediWay.Display.Services;
 
 namespace MediWay.Display.ViewModels;
-
-public sealed class DisplayCommand(Action execute) : ICommand
-{
-    public bool CanExecute(object? parameter) => true;
-    public void Execute(object? parameter) => execute();
-    public event EventHandler? CanExecuteChanged { add { } remove { } }
-}
 
 public sealed class DisplayRoomViewModel : INotifyPropertyChanged
 {
@@ -67,8 +59,6 @@ public sealed class DisplayViewModel : INotifyPropertyChanged, IAsyncDisposable
         this.announcer = announcer;
         this.clock = clock ?? (() => DateTimeOffset.UtcNow);
         if (announcer is not null) announcer.Changed += OnSpeechChanged;
-        RefreshCommand = new(RequestRefresh);
-        SpeechTestCommand = new(() => announcer?.Test());
     }
     public IReadOnlyList<DisplayRoomViewModel> Rooms { get; private set; } = [];
     public IReadOnlyList<DisplayRoomViewModel> VisibleRooms => pages.Count == 0 ? [] : pages[pageIndex];
@@ -85,9 +75,6 @@ public sealed class DisplayViewModel : INotifyPropertyChanged, IAsyncDisposable
     public string ConnectionText => !IsFresh ? "갱신 중단 · 마지막 정보입니다" : IsRealtime ? "실시간 연결됨" : "주기 조회로 갱신 중 · 실시간 연결 재시도";
     public string UpdatedText { get; private set; } = "서버 현황을 확인하고 있습니다";
     public string Message { get; private set; } = "";
-    public DisplayCommand RefreshCommand { get; }
-    public DisplayCommand SpeechTestCommand { get; }
-    public bool SpeechEnabled { get => announcer?.Enabled ?? false; set { if (announcer is not null) announcer.Enabled = value; } }
     public string SpeechStatus => announcer?.StatusText ?? "음성 안내 사용 안 함";
     private void OnSpeechChanged() => Post(Notify);
     public event PropertyChangedEventHandler? PropertyChanged;

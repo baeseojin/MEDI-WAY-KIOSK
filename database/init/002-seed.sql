@@ -4,5 +4,6 @@ INSERT INTO rooms VALUES
  ('20000000-0000-0000-0000-000000000001','10000000-0000-0000-0000-000000000001','IM01','내과 1진료실'),
  ('20000000-0000-0000-0000-000000000002','10000000-0000-0000-0000-000000000001','IM02','내과 2진료실');
 INSERT INTO patients SELECT ('30000000-0000-0000-0000-' || lpad(n::text,12,'0'))::uuid,
- 'P' || lpad(n::text,4,'0'), '가상환자' || lpad(n::text,2,'0') FROM generate_series(1,5) AS n;
+ 'P' || lpad(n::text,4,'0'), display_name
+ FROM (VALUES (1,'김서윤'), (2,'박도현'), (3,'이하린'), (4,'정민재'), (5,'최지우')) AS seed(n,display_name);
 COMMIT;
