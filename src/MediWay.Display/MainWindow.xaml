@@ -45,8 +45,6 @@
    </ItemsControl>
   </ScrollViewer>
   <DockPanel Grid.Row="2" Margin="0,8,0,0">
-   <StackPanel DockPanel.Dock="Right" Margin="12,0,0,0"><CheckBox Content="음성 호출" IsChecked="{Binding SpeechEnabled}" Foreground="White" FontSize="17"/><Button Content="음성 테스트" Command="{Binding SpeechTestCommand}" Padding="12,6" Margin="0,8,0,0"/></StackPanel>
-   <Button Content="현황 새로고침" Command="{Binding RefreshCommand}" DockPanel.Dock="Right" Padding="12,8" Margin="16,0,0,0" FontSize="15"/>
    <StackPanel><TextBlock Foreground="White" Text="호출번호와 진료실을 확인해 주세요." FontSize="19"/><TextBlock Text="{Binding SpeechStatus}" FontSize="14" Foreground="#C5D7DF" Margin="0,4,0,0"/><TextBlock Text="{Binding Message}" FontSize="16" Foreground="#FFD5A6" Margin="0,5,0,0" AutomationProperties.LiveSetting="Polite"/></StackPanel>
   </DockPanel>
  </Grid>
